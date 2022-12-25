@@ -26,6 +26,7 @@ async function run() {
 
     // method 2
     await user1.save();
+    user1.sayHi();
     console.log(user1);
 
     const user2 = await User.create({
@@ -33,9 +34,12 @@ async function run() {
       age: 20,
       email: "haha@gm.com",
     });
+    user2.sayHi();
 
-    const getUser2 = await User.where("name")
-      .equals("ryan")
+    // .where("name").equals("ryan") is replaced by where().ByName("ryan")
+    // which is created by using userSchema.query.byName method
+    const getUser2 = await User.where()
+      .byName("ryan")
       .where("age")
       .gte(15)
       .lt(22)
@@ -45,6 +49,13 @@ async function run() {
     getUser2[0].age = 17;
     await getUser2[0].save();
     console.log(getUser2);
+
+    //testing some schema methods
+    const users3 = await User.findByName("wanis");
+    console.log(users3);
+    users3.forEach((user) => {
+      user.sayHi();
+    });
 
     const deleteUsers = await User.deleteMany({
       name: { $in: ["rayane", "ryan", "wanis", "ouanis"] },
