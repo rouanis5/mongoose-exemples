@@ -60,6 +60,9 @@ async function run() {
         name: { $in: ["rayane", "ryan", "wanis", "ouanis"] },
       });
       console.log(deleteUsers);
+
+      // close the mongo connection
+      mongoose.connection.close();
     }, 2000);
   } catch (e) {
     console.log(e.message);
