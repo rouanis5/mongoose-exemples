@@ -37,7 +37,9 @@ const userSchema = new mongoose.Schema({
 });
 
 userSchema.methods.sayHi = function () {
-  console.log(`Hi, my name is ${this.name}`);
+  console.log(
+    `Hi, my name is ${this.name} and my last update was on ${this.updatedAt}`
+  );
 };
 
 userSchema.statics.findByName = function (name) {
@@ -48,5 +50,15 @@ userSchema.statics.findByName = function (name) {
 userSchema.query.byName = function (name) {
   return this.where({ name: new RegExp(name, "i") });
 };
+
+userSchema.pre("save", function (next) {
+  this.updatedAt = Date.now();
+  next();
+});
+
+userSchema.post("save", function (doc, next) {
+  doc.sayHi();
+  next();
+});
 
 module.exports = mongoose.model("User", userSchema);
